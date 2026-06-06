@@ -11,6 +11,9 @@ func main() {
 
 	r := gin.Default()
 
+	r.POST("/register", handlers.Register)
+	r.POST("/login", handlers.Login)
+
 	r.GET("/todos", handlers.GetTodos)
 	r.GET("/todos/:id", handlers.GetTodo)
 	r.POST("/todos", handlers.CreateTodo)
