@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"todo/database"
 	"todo/handlers"
+	"todo/middleware"
 )
 
 func main() {
@@ -14,12 +15,18 @@ func main() {
 	r.POST("/register", handlers.Register)
 	r.POST("/login", handlers.Login)
 
-	r.GET("/todos", handlers.GetTodos)
-	r.GET("/todos/:id", handlers.GetTodo)
-	r.POST("/todos", handlers.CreateTodo)
-	r.PUT("/todos/:id", handlers.UpdateTodo)
+	auth := r.Group("/")
+	auth.Use(middleware.AuthMiddleware())
 
-	r.DELETE("/todos/:id", handlers.DeleteTodo)
+	{
+
+		auth.GET("/todos", handlers.GetTodos)
+		auth.GET("/todos/:id", handlers.GetTodo)
+		auth.POST("/todos", handlers.CreateTodo)
+		auth.PUT("/todos/:id", handlers.UpdateTodo)
+
+		auth.DELETE("/todos/:id", handlers.DeleteTodo)
+	}
 
 	r.Run(":8080")
 }
